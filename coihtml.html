@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fundamental Duties Impact</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+        }
+        
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .slide {
+            background: white;
+            width: 90%;
+            max-width: 1200px;
+            height: 85vh;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 60px;
+            display: none;
+            flex-direction: column;
+            position: relative;
+            overflow-y: auto;
+        }
+        
+        .slide.active {
+            display: flex;
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .slide-header {
+            background: linear-gradient(135deg, #FF9933 0%, #138808 50%, #000080 100%);
+            padding: 15px 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .slide h1 {
+            color: white;
+            font-size: 42px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .slide h2 {
+            color: #333;
+            font-size: 36px;
+            margin-bottom: 25px;
+            border-bottom: 4px solid #FF9933;
+            padding-bottom: 10px;
+        }
+        
+        .slide h3 {
+            color: #667eea;
+            font-size: 24px;
+            margin: 20px 0 10px 0;
+        }
+        
+        .subtitle {
+            color: white;
+            font-size: 22px;
+            text-align: center;
+            font-weight: 300;
+        }
+        
+        .team-members {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .team-members h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .team-members ul {
+            list-style: none;
+            font-size: 20px;
+            color: #555;
+        }
+        
+        .team-members li {
+            padding: 8px 0;
+            border-left: 4px solid #FF9933;
+            padding-left: 15px;
+            margin: 8px 0;
+        }
+        
+        .content {
+            flex: 1;
+            font-size: 20px;
+            line-height: 1.8;
+            color: #333;
+        }
+        
+        .content ul {
+            margin-left: 30px;
+            margin-top: 15px;
+        }
+        
+        .content li {
+            margin: 12px 0;
+            padding-left: 10px;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, #FFE5B4 0%, #FFD700 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #FF9933;
+        }
+        
+        .duty-box {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #667eea;
+        }
+        
+        .duty-box strong {
+            color: #667eea;
+            font-size: 22px;
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #138808;
+        }
+        
+        .card h4 {
+            color: #138808;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+        
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+        
+        .btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .slide-number {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .speaker-tag {
+            background: #FF9933;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .quote {
+            background: #f8f9fa;
+            border-left: 5px solid #138808;
+            padding: 20px;
+            margin: 20px 0;
+            font-style: italic;
+            font-size: 22px;
+            color: #555;
+        }
+        
+        .emphasis {
+            color: #FF9933;
+            font-weight: 600;
+        }
+        
+        .timeline {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .timeline-item {
+            text-align: center;
+        }
+        
+        .timeline-year {
+            font-size: 28px;
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        .timeline-text {
+            font-size: 16px;
+            color: #555;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="slide-number">1/18</div>
+            <div class="slide-header">
+                <h1>FUNDAMENTAL DUTIES IMPACT</h1>
+                <p class="subtitle">Understanding Constitutional Responsibilities of Indian Citizens</p>
+            </div>
+            <div class="team-members">
+                <h3>Presented By:</h3>
+                <ul>
+                    <li>🎤 Jeedi Joshua Chris Vimal-URK25CS1140</li>
+                    <li>🎤 Ahamed Afrideen A-URK25CS1141</li>
+                    <li>🎤 Roshan Anand Seeli-URK25CS1142</li>
+                </ul>
+            </div>
+            <div class="highlight">
+                <h3 style="color: #333; margin: 0;">📅 Date: November 2024</h3>
+            </div>
+        </div>
+
+        <!-- Slide 2: Introduction -->
+        <div class="slide">
+            <div class="slide-number">2/18</div>
+            <span class="speaker-tag">👤 Speaker: Jeedi Joshua Chris Vimal</span>
+            <h2>Introduction to Fundamental Duties</h2>
+            <div class="content">
+                <div class="highlight">
+                    <h3 style="color: #333;">📜 Article 51A - Indian Constitution</h3>
+                    <p><strong>Fundamental Duties</strong> are moral obligations of every Indian citizen to help promote a spirit of patriotism and uphold the unity of India.</p>
+                </div>
+                <div class="grid-2">
+                    <div class="card">
+                        <h4>📅 Added In</h4>
+                        <p>42nd Amendment Act, 1976</p>
+                    </div>
+                    <div class="card">
+                        <h4>👥 Recommended By</h4>
+                        <p>Swaran Singh Committee</p>
+                    </div>
+                </div>
+                <div class="duty-box">
+                    <p><strong>Originally:</strong> 10 Duties (1976)</p>
+                    <p><strong>Currently:</strong> 11 Duties (11th added in 2002)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Historical Background -->
+        <div class="slide">
+            <div class="slide-number">3/18</div>
+            <span class="speaker-tag">👤 Speaker: Jeedi Joshua Chris Vimal</span>
+            <h2>Historical Background</h2>
+            <div class="content">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-year">1976</div>
+                        <div class="timeline-text">42nd Amendment<br>10 Duties Added</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">→</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2002</div>
+                        <div class="timeline-text">86th Amendment<br>11th Duty Added</div>
+                    </div>
+                </div>
+                <div class="highlight">
+                    <h3>🌍 Inspiration</h3>
+                    <p>The concept was inspired by the <span class="emphasis">Constitution of USSR</span></p>
+                </div>
+                <div class="duty-box">
+                    <strong>Swaran Singh Committee Recommendation:</strong>
+                    <p>Reminded citizens that while they enjoy fundamental rights, they also have certain responsibilities toward the nation.</p>
+                </div>
+                <div class="duty-box">
+                    <strong>86th Amendment (2002):</strong>
+                    <p>Added 11th duty - Parent/Guardian must provide education to children aged 6-14 years</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Overview of 11 Duties -->
+        <div class="slide">
+            <div class="slide-number">4/18</div>
+            <span class="speaker-tag">👤 Speaker: Jeedi Joshua Chris Vimal</span>
+            <h2>Overview: 11 Fundamental Duties</h2>
+            <div class="content">
+                <ul>
+                    <li><strong>1.</strong> Respect Constitution & National Symbols</li>
+                    <li><strong>2.</strong> Cherish Freedom Struggle Ideals</li>
+                    <li><strong>3.</strong> Protect Sovereignty & Integrity</li>
+                    <li><strong>4.</strong> Defend the Country</li>
+                    <li><strong>5.</strong> Promote Harmony & Brotherhood</li>
+                    <li><strong>6.</strong> Preserve Composite Culture</li>
+                    <li><strong>7.</strong> Protect Natural Environment</li>
+                    <li><strong>8.</strong> Develop Scientific Temper</li>
+                    <li><strong>9.</strong> Safeguard Public Property</li>
+                    <li><strong>10.</strong> Strive for Excellence</li>
+                    <li><strong>11.</strong> Provide Education (Age 6-14)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 5: Duties 1-3 -->
+        <div class="slide">
+            <div class="slide-number">5/18</div>
+            <span class="speaker-tag">👤 Speaker: Ahamed Afrideen A</span>
+            <h2>Duties 1-3 Explained</h2>
+            <div class="content">
+                <div class="duty-box">
+                    <strong>Duty 1: Respect Constitution & National Symbols</strong>
+                    <p>Abide by the Constitution and respect National Flag & National Anthem. Show reverence during national ceremonies.</p>
+                </div>
+                <div class="duty-box">
+                    <strong>Duty 2: Cherish Freedom Struggle Ideals</strong>
+                    <p>Follow the noble ideals that inspired our freedom struggle - values like truth, non-violence, and sacrifice.</p>
+                </div>
+                <div class="duty-box">
+                    <strong>Duty 3: Uphold Sovereignty, Unity & Integrity</strong>
+                    <p>Protect the sovereignty, unity, and integrity of India. Stand against forces that try to divide our nation.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Duties 4-6 -->
+        <div class="slide">
+            <div class="slide-number">6/18</div>
+            <span class="speaker-tag">👤 Speaker: Ahamed Afrideen A</span>
+            <h2>Duties 4-6 Explained</h2>
+            <div class="content">
+                <div class="duty-box">
+                    <strong>Duty 4: Defend the Country</strong>
+                    <p>Defend the country and render national service when called upon. Support the nation during crises.</p>
+                </div>
+                <div class="duty-box">
+                    <strong>Duty 5: Promote Harmony & Brotherhood</strong>
+                    <p>Promote harmony and common brotherhood among all Indians, transcending religious, linguistic, and regional diversities. Reject practices derogatory to women's dignity.</p>
+                </div>
+                <div class="duty-box">
+                    <strong>Duty 6: Value & Preserve Composite Culture</strong>
+                    <p>Value and preserve the rich heritage of our composite culture. Protect India's diversity for future generations.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Duties 7-9 -->
+        <div class="slide">
+            <div class="slide-number">7/18</div>
+            <span class="speaker-tag">👤 Speaker: Ahamed Afrideen A</span>
+            <h2>Duties 7-9 Explained</h2>
+            <div class="content">
+                <div class="duty-box">
+                    <strong>Duty 7: Protect Natural Environment</strong>
+                    <p>Protect and improve the natural environment including forests, lakes, rivers, and wildlife. Have compassion for living creatures.</p>
+                </div>
+                <div class="duty-box">
+                    <strong>Duty 8: Develop Scientific Temper</strong>
+                    <p>Develop scientific temper, humanism, and spirit of inquiry and reform. Question superstitions and embrace rational thinking.</p>
+                </div>
+                <div class="duty-box">
+                    <strong>Duty 9: Safeguard Public Property</strong>
+                    <p>Safeguard public property and abjure violence. Damaging public property harms society and wastes taxpayer money.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Duties 10-11 -->
+        <div class="slide">
+            <div class="slide-number">8/18</div>
+            <span class="speaker-tag">👤 Speaker: Ahamed Afrideen A</span>
+            <h2>Duties 10-11 Explained</h2>
+            <div class="content">
+                <div class="duty-box">
+                    <strong>Duty 10: Strive for Excellence</strong>
+                    <p>Strive towards excellence in all spheres of individual and collective activity, so the nation constantly rises to higher levels of endeavor and achievement.</p>
+                </div>
+                <div class="duty-box">
+                    <strong>Duty 11: Provide Education (Added 2002)</strong>
+                    <p>Parents/guardians must provide opportunities for education to children between 6-14 years of age. Complements the fundamental right to education.</p>
+                </div>
+                <div class="highlight">
+                    <p><strong>Note:</strong> This duty ensures no child is deprived of schooling and makes education a shared responsibility of parents and the state.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Constitutional Significance -->
+        <div class="slide">
+            <div class="slide-number">9/18</div>
+            <span class="speaker-tag">👤 Speaker: Roshan Anand Seeli</span>
+            <h2>Constitutional Significance</h2>
+            <div class="content">
+                <div class="highlight">
+                    <h3 style="color: #333;">⚖️ Balance Between Rights & Duties</h3>
+                    <p style="font-size: 24px; text-align: center; margin: 20px 0;">
+                        <span class="emphasis">Part III: Fundamental Rights</span> ⇄ <span class="emphasis">Article 51A: Fundamental Duties</span>
+                    </p>
+                </div>
+                <div class="duty-box">
+                    <strong>Key Principle:</strong>
+                    <p>Rights come with corresponding duties. This balance is essential for a healthy democracy.</p>
+                </div>
+                <div class="duty-box">
+                    <strong>Framework:</strong>
+                    <p>Together, rights and duties create a framework for responsible citizenship and social harmony. You cannot demand rights without fulfilling responsibilities.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Nature of Fundamental Duties -->
+        <div class="slide">
+            <div class="slide-number">10/18</div>
+            <span class="speaker-tag">👤 Speaker: Roshan Anand Seeli</span>
+            <h2>Nature of Fundamental Duties</h2>
+            <div class="content">
+                <div class="grid-2">
+                    <div class="card">
+                        <h4>❌ Non-Justiciable</h4>
+                        <p>Not legally enforceable - no direct punishment for violation</p>
+                    </div>
+                    <div class="card">
+                        <h4>💭 Moral Obligations</h4>
+                        <p>Civic and ethical responsibilities</p>
+                    </div>
+                </div>
+                <div class="highlight">
+                    <h3 style="color: #333;">⚖️ However, Courts Can:</h3>
+                    <ul>
+                        <li>Consider duties while interpreting laws</li>
+                        <li>Use them as guiding principles for legislation</li>
+                        <li>Reference them in judicial decisions</li>
+                    </ul>
+                </div>
+                <div class="duty-box">
+                    <strong>Impact:</strong>
+                    <p>Several laws have been enacted to give effect to these duties indirectly, making them practically significant despite being non-justiciable.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Impact on Society -->
+        <div class="slide">
+            <div class="slide-number">11/18</div>
+            <span class="speaker-tag">👤 Speaker: Roshan Anand Seeli</span>
+            <h2>Impact on Society</h2>
+            <div class="content">
+                <div class="duty-box">
+                    <strong>🇮🇳 Promotes National Unity</strong>
+                    <p>Encourages citizens to look beyond narrow identities of caste, religion, or region</p>
+                </div>
+                <div class="duty-box">
+                    <strong>🗳️ Strengthens Democratic Values</strong>
+                    <p>Makes citizens aware of their responsibilities in democracy</p>
+                </div>
+                <div class="duty-box">
+                    <strong>🤝 Encourages Civic Consciousness</strong>
+                    <p>Development is everyone's responsibility, not just the government's</p>
+                </div>
+                <div class="duty-box">
+                    <strong>🎭 Protects Cultural Heritage</strong>
+                    <p>Ensures diversity and composite culture are preserved</p>
+                </div>
+                <div class="duty-box">
+                    <strong>🌳 Environmental Conservation</strong>
+                    <p>Greater awareness about conservation and sustainable development</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Impact on Legislation -->
+        <div class="slide">
+            <div class="slide-number">12/18</div>
+            <span class="speaker-tag">👤 Speaker: Roshan Anand Seeli</span>
+            <h2>Impact on Legislation</h2>
+            <div class="content">
+                <h3>Laws Inspired by Fundamental Duties:</h3>
+                <div class="duty-box">
+                    <strong>🇮🇳 Prevention of Insults to National Honour Act, 1971</strong>
+                    <p>Criminalizes disrespect to flag and anthem - supports Duty 1</p>
+                </div>
+                <div class="duty-box">
+                    <strong>🦁 Wildlife Protection Act, 1972</strong>
+                    <p>Protects wildlife and natural habitats - supports Duty 7</p>
+                </div>
+                <div class="duty-box">
+                    <strong>🌍 Environmental Protection Act, 1986</strong>
+                    <p>Framework for environmental conservation - supports Duty 7</p>
+                </div>
+                <div class="duty-box">
+                    <strong>📚 Right to Education Act, 2009</strong>
+                    <p>Makes 11th duty legally enforceable - ensures free & compulsory education</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Judicial Interpretation -->
+        <div class="slide">
+            <div class="slide-number">13/18</div>
+            <span class="speaker-tag">👤 Speaker: Roshan Anand Seeli</span>
+            <h2>Judicial Interpretation & Landmark Cases</h2>
+            <div class="content">
+                <div class="duty-box">
+                    <strong>⚖️ AIIMS Students Union vs. AIIMS (1968)</strong>
+                    <p>Supreme Court emphasized that citizens must respect national symbols</p>
+                </div>
+                <div class="duty-box">
+                    <strong>🌳 M.C. Mehta vs. Union of India (Multiple PILs)</strong>
+                    <p>Landmark judgments on environmental protection, directly invoking duty to protect nature</p>
+                </div>
+                <div class="duty-box">
+                    <strong>⚖️ Bijoe Emmanuel vs. State of Kerala (1986)</strong>
+                    <p>Court balanced duty to respect national anthem with freedom of religion - showed how duties must be harmonized with rights</p>
+                </div>
+                <div class="highlight">
+                    <p><strong>Significance:</strong> While duties aren't directly enforceable, they significantly influence judicial thinking and interpretation of laws.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: Challenges -->
+        <div class="slide">
+            <div class="slide-number">14/18</div>
+            <span class="speaker-tag">👤 Speaker: Roshan Anand Seeli</span>
+            <h2>Challenges in Implementation</h2>
+            <div class="content">
+                <div class="duty-box">
+                    <strong>❗ Lack of Public Awareness</strong>
+                    <p>Many citizens don't even know about these duties</p>
+                </div>
+                <div class="duty-box">
+                    <strong>⚖️ Non-Justiciable Nature</strong>
+                    <p>No direct punishment for violation reduces effectiveness</p>
+                </div>
+                <div class="duty-box">
+                    <strong>🚫 No Enforcement Mechanism</strong>
+                    <p>Unlike fundamental rights which can be enforced through courts</p>
+                </div>
+                <div class="duty-box">
+                    <strong>📚 Limited Education</strong>
+                    <p>Education system focuses on rights but rarely emphasizes duties equally</p>
+                </div>
+                <div class="duty-box">
+                    <strong>⚠️ Confusion with Rights</strong>
+                    <p>How to balance duties with fundamental rights when they seem to conflict</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: Practical Applications -->
+        <div class="slide">
+            <div class="slide-number">15/18</div>
+            <span class="speaker-tag">👤 Speaker: Jeedi Joshua Chris Vimal</span>
+            <h2>Practical Applications in Daily Life</h2>
+            <div class="content">
+                <div class="duty-box">
+                    <strong>🎵 Standing for National Anthem</strong>
+                    <p>Respectfully standing in cinema halls or at events - Duty 1</p>
+                </div>
+                <div class="duty-box">
+                    <strong>🗳️ Voting in Elections</strong>
+                    <p>Participating responsibly in democracy - Multiple duties</p>
+                </div>
+                <div class="duty-box">
+                    <strong>🧹 Keeping Public Places Clean</strong>
+                    <p>Not littering, maintaining cleanliness - Duty 9</p>
+                </div>
+                <div class="duty-box">
+                    <strong>🌱 Planting Trees & Avoiding Plastic</strong>
+                    <p>Environmental conservation actions - Duty 7</p>
+                </div>
+                <div class="duty-box">
+                    <strong>🤝 Promoting Harmony</strong>
+                    <p>Standing against discrimination - Duty 5</p>
+                </div>
+                <div class="duty-box">
+                    <strong>🔬 Questioning Superstitions</strong>
+                    <p>Promoting scientific thinking - Duty 8</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 16: Global Perspective -->
+        <div class="slide">
+            <div class="slide-number">16/18</div>
+            <span class="speaker-tag">👤 Speaker: Jeedi Joshua Chris Vimal</span>
+            <h2>Global Perspective</h2>
+            <div class="content">
+                <div class="grid-2">
+                    <div class="card">
+                        <h4>🇮🇳 India</h4>
+                        <p>11 Fundamental Duties explicitly in Constitution</p>
+                    </div>
+                    <div class="card">
+                        <h4>🇺🇸 USA</h4>
+                        <p>No duties in Constitution - culturally emphasized civic responsibilities</p>
+                    </div>
+                    <div class="card">
+                        <h4>🇯🇵 Japan</h4>
+                        <p>Constitution mentions duties: work, education, paying taxes</p>
+                    </div>
+                    <div class="card">
+                        <h4>🇨🇳 China</h4>
+                        <p>Explicitly lists citizens' duties including safeguarding national unity</p>
+                    </div>
+                </div>
+                <div class="highlight">
+                    <p><strong>India's Unique Model:</strong> Balances extensive list of rights with comprehensive list of duties, reflecting our philosophy that healthy democracy requires both.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 17: Recommendations -->
+        <div class="slide">
+            <div class="slide-number">17/18</div>
+            <span class="speaker-tag">👤 Speaker: Jeedi Joshua Chris Vimal</span>
+            <h2>Recommendations for Strengthening Impact</h2>
+            <div class="content">
+                <div class="duty-box">
+                    <strong>📚 School Curriculum</strong>
+                    <p>Include detailed teaching about duties from early grades</p>
+                </div>
+                <div class="duty-box">
+                    <strong>📢 Public Awareness Campaigns</strong>
+                    <p>Government campaigns through media and social media</p>
+                </div>
+                <div class="duty-box">
+                    <strong>🤝 Community Programs</strong>
+                    <p>Encourage citizens through volunteer work and activities</p>
+                </div>
+                <div class="duty-box">
+                    <strong>⚖️ Selective Legal Enforcement</strong>
+                    <p>Consider enforcement for critical duties like environmental protection</p>
+                </div>
+                <div class="duty-box">
+                    <strong>👨‍🎓 Youth Engagement</strong>
+                    <p>Competitions, debates, and activities centered around duties</p>
+                </div>
+                <div class="duty-box">
+                    <strong>📱 Media Involvement</strong>
+                    <p>Showcase positive examples of citizens fulfilling duties</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 18: Conclusion -->
+        <div class="slide">
+            <div class="slide-number">18/18</div>
+            <span class="speaker-tag">👤 Speaker: Ahamed Afrideen A</span>
+            <h2>Conclusion</h2>
+            <div class="content">
+                <div class="highlight">
+                    <h3 style="color: #333;">Key Takeaways:</h3>
+                    <ul>
+ - Both are essential for democracy</li>
+                        <li><strong>Duties create responsible citizens</strong> - They promote civic consciousness</li>
+                        <li><strong>Non-justiciable but influential</strong> - Impact through legislation and judicial interpretation</li>
+                        <li><strong>Need better implementation</strong> - Awareness and education are key</li>
+                    </ul>
+                </div>
+                <div class="quote">
+                    "A nation's strength lies not just in the rights it guarantees, but in the duties its citizens willingly embrace."
+                </div>
+                <div class="highlight">
+                    <h3 style="color: #333; text-align: center;">Thank You! 🙏</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="controls">
+        <button class="btn" id="prevBtn" onclick="changeSlide(-1)">← Previous</button>
+        <button class="btn" id="nextBtn" onclick="changeSlide(1)">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            // Update button states
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            if (direction === 1 && currentSlide < totalSlides - 1) {
+                showSlide(currentSlide + 1);
+            } else if (direction === -1 && currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>
